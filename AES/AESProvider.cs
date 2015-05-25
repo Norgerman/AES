@@ -106,6 +106,40 @@ namespace AES
         }
 
         /// <summary>
+        /// Use current mode padding mode key and iv to encrypt single block
+        /// </summary>
+        /// <param name="inputbuffer">bytes to encrypt</param>
+        /// <param name="offset">the start position of the bytes</param>
+        /// <param name="count">count of bytes</param>
+        /// <returns>bytes after encrypted</returns>
+        public byte[] EncryptSingleBlock(byte[] inputbuffer, int offset, int count)
+        {
+            ICryptoTransform encryptor;
+            MemoryStream ms;
+            CryptoStream cs;
+            byte[] encrypted;
+
+            encryptor = this.CreateEncryptor();
+
+            ms = new MemoryStream();
+            cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write);
+
+            try
+            {
+                cs.Write(inputbuffer, offset, count);
+                cs.FlushFinalBlock();
+            }
+            finally
+            {
+                cs.Close();
+                encrypted = ms.ToArray();
+                ms.Close();
+            }
+
+            return encrypted;
+        }
+
+        /// <summary>
         /// PaddingMode PCKS7(cannot change)
         /// </summary>
         /// <param name="inputbuffer">bytes to encrypt</param>
@@ -189,6 +223,33 @@ namespace AES
             }
 
             return encrypted;
+        }
+
+        /// <summary>
+        /// Use current mode padding mode key and iv to decrypt single block
+        /// </summary>
+        /// <param name="inputbuffer">bytes to decrypt</param>
+        /// <param name="offset">the start position of the bytes</param>
+        /// <param name="count">count of bytes</param>
+        /// <returns>bytes after decrypted</returns>
+        public byte[] DecryptSingleBlock(byte[] inputbuffer, int offset, int count)
+        {
+            int len;
+            ICryptoTransform decryptor;
+            MemoryStream ms;
+            CryptoStream cs;
+            byte[] decrypted;
+
+            decryptor = this.CreateDecryptor();
+
+            using (ms = new MemoryStream(inputbuffer, offset, count))
+            using (cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
+            {
+                decrypted = new byte[count];
+                len = cs.Read(decrypted, 0, count);
+            }
+
+            return decrypted.Take(len).ToArray();
         }
 
         /// <summary>
