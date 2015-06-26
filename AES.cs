@@ -88,7 +88,7 @@ namespace AESDLL
             }
             finally
             {
-                GC.Collect();
+                //GC.Collect();
             }
         }
 
@@ -138,7 +138,7 @@ namespace AESDLL
             }
             finally
             {
-                GC.Collect();
+                //GC.Collect();
             }
         }
 
@@ -196,7 +196,7 @@ namespace AESDLL
             finally
             {
                 m_temp = null;
-                GC.Collect();
+                //GC.Collect();
             }
         }
 
@@ -241,7 +241,7 @@ namespace AESDLL
             }
             finally
             {
-                GC.Collect();
+                //GC.Collect();
             }
         }
 
@@ -291,7 +291,7 @@ namespace AESDLL
             }
             finally
             {
-                GC.Collect();
+                //GC.Collect();
             }
         }
 
@@ -348,7 +348,7 @@ namespace AESDLL
             finally
             {
                 m_temp = null;
-                GC.Collect();
+                //GC.Collect();
             }
         }
 
