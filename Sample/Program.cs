@@ -24,13 +24,13 @@ namespace Test
                                       0x92,0x0F,0x98,0x3B,0x34,0x3B,0xFF,0xBA,
                                       0xA4,0x67,0x28,0x1D,0xC9,0xB5,0x70,0x41};
 
-            int bufsize = 65536;     
+            int bufsize = 65536;
 
             AESProvider aes = new AESProvider(Key, IV);
             string s = Console.ReadLine();
             byte[] c = aes.Encrypt(s);
             byte[] ob = Encoding.UTF8.GetBytes(s);
-            byte[] c2 = aes.EncryptFinalBlock(ob, 0, ob.Length);
+            byte[] c2 = aes.EncryptSingleBlock(ob, 0, ob.Length);
 
             Console.WriteLine(Convert.ToBase64String(c));
             Console.WriteLine(Convert.ToBase64String(c2));
@@ -56,11 +56,11 @@ namespace Test
                 byte[] enc;
                 if (orfile.Position < orfile.Length)
                 {
-                    enc=aes.EncryptBlock(buffer, 0, len);
+                    enc = aes.EncryptBlock(buffer, 0, len);
                 }
                 else
                 {
-                    enc=aes.EncryptFinalBlock(buffer, 0, len);
+                    enc = aes.EncryptFinalBlock(buffer, 0, len);
                 }
                 ofile.Write(enc, 0, enc.Length);
             }

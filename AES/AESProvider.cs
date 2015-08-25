@@ -57,27 +57,9 @@ namespace AES
                 return null;
             }
 
-            byte[] encrypted;
-            byte[] plaintextb = Encoding.UTF8.GetBytes(plaintext);
+            byte[] plaintextByteArray = Encoding.UTF8.GetBytes(plaintext);
 
-            ICryptoTransform encryptor = this.CreateEncryptor();
-
-            MemoryStream msEcrypt = new MemoryStream();
-            CryptoStream csEncrypt = new CryptoStream(msEcrypt, encryptor, CryptoStreamMode.Write);
-
-            try
-            {
-                csEncrypt.Write(plaintextb, 0, plaintextb.Length);
-                csEncrypt.FlushFinalBlock();
-            }
-            finally
-            {
-                csEncrypt.Dispose();
-                encrypted = msEcrypt.ToArray();
-                msEcrypt.Dispose();
-            }
-
-            return encrypted;
+            return EncryptSingleBlock(plaintextByteArray, 0, plaintextByteArray.Length);
         }
 
         /// <summary>
@@ -92,27 +74,19 @@ namespace AES
                 return null;
             }
 
-            string plaintext;
-            ICryptoTransform decryptor = this.CreateDecryptor();
+            byte[] plainTextByteArray = this.DecryptSingleBlock(cipher, 0, cipher.Length);
 
-            using (MemoryStream msDecrypt = new MemoryStream(cipher))
-            using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-            using (StreamReader srDecrypt = new StreamReader(csDecrypt, Encoding.UTF8))
-            {
-                plaintext = srDecrypt.ReadToEnd();
-            }
-
-            return plaintext;
+            return Encoding.UTF8.GetString(plainTextByteArray);
         }
 
         /// <summary>
         /// Use current mode padding mode key and iv to encrypt single block
         /// </summary>
-        /// <param name="inputbuffer">bytes to encrypt</param>
+        /// <param name="inputBuffer">bytes to encrypt</param>
         /// <param name="offset">the start position of the bytes</param>
         /// <param name="count">count of bytes</param>
         /// <returns>bytes after encrypted</returns>
-        public byte[] EncryptSingleBlock(byte[] inputbuffer, int offset, int count)
+        public byte[] EncryptSingleBlock(byte[] inputBuffer, int offset, int count)
         {
             ICryptoTransform encryptor;
             MemoryStream ms;
@@ -126,7 +100,7 @@ namespace AES
 
             try
             {
-                cs.Write(inputbuffer, offset, count);
+                cs.Write(inputBuffer, offset, count);
                 cs.FlushFinalBlock();
             }
             finally
@@ -142,11 +116,11 @@ namespace AES
         /// <summary>
         /// PaddingMode PCKS7(cannot change)
         /// </summary>
-        /// <param name="inputbuffer">bytes to encrypt</param>
+        /// <param name="inputBuffer">bytes to encrypt</param>
         /// <param name="offset">the start position of the bytes</param>
         /// <param name="count">count of bytes(must be a multiple of 16)</param>
         /// <returns>bytes after encrypted</returns>
-        public byte[] EncryptBlock(byte[] inputbuffer, int offset, int count)
+        public byte[] EncryptBlock(byte[] inputBuffer, int offset, int count)
         {
             ICryptoTransform encryptor;
             MemoryStream ms;
@@ -167,7 +141,7 @@ namespace AES
 
             try
             {
-                cs.Write(inputbuffer, offset, count);
+                cs.Write(inputBuffer, offset, count);
                 cs.FlushFinalBlock();
                 ms.Seek(-16, SeekOrigin.End);
                 ms.Read(m_temp, 0, 16);
@@ -186,11 +160,11 @@ namespace AES
         /// to encrypt the final bytes
         /// PaddingMode PCKS7(cannot change)
         /// </summary>
-        /// <param name="inputbuffer">bytes to encrypt</param>
+        /// <param name="inputBuffer">bytes to encrypt</param>
         /// <param name="offset">the start position of the bytes</param>
         /// <param name="count">count of bytes</param>
         /// <returns>bytes after encrypted</returns>
-        public byte[] EncryptFinalBlock(byte[] inputbuffer, int offset, int count)
+        public byte[] EncryptFinalBlock(byte[] inputBuffer, int offset, int count)
         {
             ICryptoTransform encryptor;
             MemoryStream ms;
@@ -211,7 +185,7 @@ namespace AES
 
             try
             {
-                cs.Write(inputbuffer, offset, count);
+                cs.Write(inputBuffer, offset, count);
                 cs.FlushFinalBlock();
             }
             finally
@@ -228,11 +202,11 @@ namespace AES
         /// <summary>
         /// Use current mode padding mode key and iv to decrypt single block
         /// </summary>
-        /// <param name="inputbuffer">bytes to decrypt</param>
+        /// <param name="inputBuffer">bytes to decrypt</param>
         /// <param name="offset">the start position of the bytes</param>
         /// <param name="count">count of bytes</param>
         /// <returns>bytes after decrypted</returns>
-        public byte[] DecryptSingleBlock(byte[] inputbuffer, int offset, int count)
+        public byte[] DecryptSingleBlock(byte[] inputBuffer, int offset, int count)
         {
             int len;
             ICryptoTransform decryptor;
@@ -242,7 +216,7 @@ namespace AES
 
             decryptor = this.CreateDecryptor();
 
-            using (ms = new MemoryStream(inputbuffer, offset, count))
+            using (ms = new MemoryStream(inputBuffer, offset, count))
             using (cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
             {
                 decrypted = new byte[count];
@@ -255,11 +229,11 @@ namespace AES
         /// <summary>
         /// PaddingMode PCKS7(cannot change)
         /// </summary>
-        /// <param name="inputbuffer">bytes to decrypt</param>
+        /// <param name="inputBuffer">bytes to decrypt</param>
         /// <param name="offset">the start position of the bytes</param>
         /// <param name="count">count of bytes(must be a multiple of 16)</param>
         /// <returns>bytes after decrypted</returns>
-        public byte[] DecryptBlock(byte[] inputbuffer, int offset, int count)
+        public byte[] DecryptBlock(byte[] inputBuffer, int offset, int count)
         {
             ICryptoTransform decryptor;
             MemoryStream ms;
@@ -275,7 +249,7 @@ namespace AES
             this.Padding = PaddingMode.None;
             decryptor = this.CreateDecryptor(this.Key, this.m_temp);
 
-            using (ms = new MemoryStream(inputbuffer, offset, count))
+            using (ms = new MemoryStream(inputBuffer, offset, count))
             using (cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
             {
                 ms.Seek(-16, SeekOrigin.End);
@@ -294,11 +268,11 @@ namespace AES
         /// to decrypt the final bytes
         /// PaddingMode PCKS7(cannot change)
         /// </summary>
-        /// <param name="inputbuffer">bytes to decrypt</param>
+        /// <param name="inputBuffer">bytes to decrypt</param>
         /// <param name="offset">the start position of the bytes</param>
         /// <param name="count">count of bytes</param>
         /// <returns>bytes after decrypted</returns>
-        public byte[] DecryptFinalBlock(byte[] inputbuffer, int offset, int count)
+        public byte[] DecryptFinalBlock(byte[] inputBuffer, int offset, int count)
         {
             ICryptoTransform decryptor;
             MemoryStream ms;
@@ -315,7 +289,7 @@ namespace AES
             this.Padding = PaddingMode.PKCS7;
             decryptor = this.CreateDecryptor(this.Key, this.m_temp);
 
-            using (ms = new MemoryStream(inputbuffer, offset, count))
+            using (ms = new MemoryStream(inputBuffer, offset, count))
             using (cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
             {
                 decrypted = new byte[count];
