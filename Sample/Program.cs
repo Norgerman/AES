@@ -26,7 +26,7 @@ namespace Test
 
             int bufsize = 65536;
 
-            AESProvider aes = new AESProvider(Key, IV);
+            AesProvider aes = new AesProvider(Key, IV);
             string s = Console.ReadLine();
             byte[] c = aes.Encrypt(s);
             byte[] ob = Encoding.UTF8.GetBytes(s);
