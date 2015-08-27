@@ -15,14 +15,14 @@ namespace AES
     /// default mode is cbc
     /// default paddingmode is pkcs7
     /// </summary>
-    public sealed class AESProvider : Aes
+    public sealed class AesProvider : Aes
     {
         private byte[] m_temp;
 
         /// <summary>
         /// Create a instance use random key and iv
         /// </summary>
-        public AESProvider()
+        public AesProvider()
             : base()
         {
             this.Mode = CipherMode.CBC;
@@ -36,7 +36,7 @@ namespace AES
         /// </summary>
         /// <param name="key">Key</param>
         /// <param name="iv">IV</param>
-        public AESProvider(byte[] key, byte[] iv)
+        public AesProvider(byte[] key, byte[] iv)
             : base()
         {
             this.Mode = CipherMode.CBC;

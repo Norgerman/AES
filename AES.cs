@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace AESDLL
+/// <summary>
+/// AlgrothmTestClass
+/// </summary>
+namespace AES
 {
     public enum Keysize : byte { Bits128, Bits192, Bits256 }
 
-    public class AES
+    public class AesProvider
     {
         private int Nb, Nk, Nr;
         private byte[] key;
@@ -26,7 +29,7 @@ namespace AESDLL
         /// <param name="keysize">Enum Bits128,Bits192 or Bits256</param>
         /// <param name="keyBytes">ByteArray of key(16,24 or 32 bytes)</param>
         /// <param name="IVBytes">Initialization Vector 16 bytes</param>
-        public AES(Keysize keysize, byte[] keyBytes, byte[] IVBytes)
+        public AesProvider(Keysize keysize, byte[] keyBytes, byte[] IVBytes)
         {
             setNbNkNr(keysize);
 

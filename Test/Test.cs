@@ -26,7 +26,7 @@ namespace Test
                                       0x92,0x0F,0x98,0x3B,0x34,0x3B,0xFF,0xBA,
                                       0xA4,0x67,0x28,0x1D,0xC9,0xB5,0x70,0x41};
             string s = "abcdefghijklmnop";
-            using (AESProvider aesp = new AESProvider(key, iv))
+            using (AesProvider aesp = new AesProvider(key, iv))
             {
                 var enc1 = aesp.Encrypt(s);
                 var bs = Encoding.UTF8.GetBytes(s);
@@ -50,7 +50,7 @@ namespace Test
                                       0x92,0x0F,0x98,0x3B,0x34,0x3B,0xFF,0xBA,
                                       0xA4,0x67,0x28,0x1D,0xC9,0xB5,0x70,0x41};
             string s = "a";
-            using (AESProvider aesp = new AESProvider(key, iv))
+            using (AesProvider aesp = new AesProvider(key, iv))
             {
                 aesp.Mode = System.Security.Cryptography.CipherMode.ECB;
                 var enc1 = aesp.Encrypt(s);
@@ -75,7 +75,7 @@ namespace Test
                                       0x92,0x0F,0x98,0x3B,0x34,0x3B,0xFF,0xBA,
                                       0xA4,0x67,0x28,0x1D,0xC9,0xB5,0x70,0x41};
             string s = "a";
-            using (AESProvider aesp = new AESProvider(key, iv))
+            using (AesProvider aesp = new AesProvider(key, iv))
             {
                 aesp.Mode = System.Security.Cryptography.CipherMode.CFB;
                 var enc1 = aesp.Encrypt(s);
@@ -100,7 +100,7 @@ namespace Test
                                       0x92,0x0F,0x98,0x3B,0x34,0x3B,0xFF,0xBA,
                                       0xA4,0x67,0x28,0x1D,0xC9,0xB5,0x70,0x41};
             string s = "abcdefghijklmnop";
-            using (AESProvider aesp = new AESProvider(key, iv))
+            using (AesProvider aesp = new AesProvider(key, iv))
             {
                 aesp.Padding = System.Security.Cryptography.PaddingMode.Zeros;
                 var enc1 = aesp.Encrypt(s);
@@ -125,7 +125,7 @@ namespace Test
                                       0x92,0x0F,0x98,0x3B,0x34,0x3B,0xFF,0xBA,
                                       0xA4,0x67,0x28,0x1D,0xC9,0xB5,0x70,0x41};
             string s = "a";
-            using (AESProvider aesp = new AESProvider(key, iv))
+            using (AesProvider aesp = new AesProvider(key, iv))
             {
                 aesp.Mode = System.Security.Cryptography.CipherMode.ECB;
                 aesp.Padding = System.Security.Cryptography.PaddingMode.Zeros;
@@ -151,7 +151,7 @@ namespace Test
                                       0x92,0x0F,0x98,0x3B,0x34,0x3B,0xFF,0xBA,
                                       0xA4,0x67,0x28,0x1D,0xC9,0xB5,0x70,0x41};
             string s = "a";
-            using (AESProvider aesp = new AESProvider(key, iv))
+            using (AesProvider aesp = new AesProvider(key, iv))
             {
                 aesp.Mode = System.Security.Cryptography.CipherMode.CFB;
                 aesp.Padding = System.Security.Cryptography.PaddingMode.Zeros;
